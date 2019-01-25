@@ -48,8 +48,10 @@ class Player:
         self.mana = 100
         self.stamina = 100
 
-health = Player()
+player = Player()
 print(player.health)
+print(player.mana)
+print(player.stamina)
 
 
 
