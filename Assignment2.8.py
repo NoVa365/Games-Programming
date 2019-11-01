@@ -38,9 +38,13 @@ butterflyImage = pygame.image.load("butterfly.png").convert_alpha()
 butterflyImage.set_colorkey((255, 255, 255))
 bf = pygame.transform.scale(butterflyImage, (100, 100))
 
+background = pygame.image.load("background.jpg").convert_alpha()
+#background_size = pygame.transfrom.scale(background, (800, 600))
+background_size = pygame.transform.scale(background, (800, 600))
 last_butterfly_spawn = 0
 last_rock_spawn = 0
-butterflyTimer = 10
+butterflyTimer = 0
+
 
 #background = pygame.image.load("background.jpg").convert_alpha()
 
@@ -61,10 +65,11 @@ class Player:
 
         if pressed_keys[pygame.K_d] and self.x < 800 - width - vel:
             self.x += 5
-
+	
+    def eat(self):
         if player_click[0]:
-            pygame.draw.line(win, (0, 255, 0), (self.x, cursor), width = 1)
-            print("I clicked")
+            pygame.draw.line(win, (255, 0, 0), (self.x + 80, self.y + 38), cursor, 5)
+
 
 
         #pygame.draw.rect(win, (0, 255, 0), (x, y, width, height))
@@ -108,6 +113,8 @@ class Butterflies:
         pass
 
 
+
+
 butterflylist = []
 
 
@@ -123,13 +130,18 @@ while run:
         if event.type == pygame.QUIT:
             run = False
 
-    if time.time() - last_butterfly_spawn > 0.8:
+
+    if time.time() - last_butterfly_spawn > 0.9:
         butterflylist.append(Butterflies())
         last_butterfly_spawn = time.time()
 
-    if time.time() - last_rock_spawn > 0.6:
+
+    if time.time() - last_rock_spawn > 0.3:
         rocklist.append(Rock())
         last_rock_spawn = time.time()
+
+
+
 
 
 
@@ -152,9 +164,12 @@ while run:
 #Fills in the display with black to stop the rectangle drawing more than one.
 
     win.fill((0, 0, 0))
-
+    win.blit(background_size, [0, 0])
     player.draw()
     player.move()
+    player.eat()
+    butterflyTimer += 1
+
 
     e = 0
     while e < len(rocklist):
@@ -168,14 +183,17 @@ while run:
 
     b = 0
     while b < len(butterflylist):
-        #butterflylist[b].move()
         butterflylist[b].draw()
-        if butterflylist[b] or time.time(butterflyTimer) >= 0: #''''if a certain time has passed the butterfly should dissappear'''
+        if butterflylist[b] or time.time(butterflyTimer) >= 5:
             del butterflylist[b]
             b -= 1
 
         b += 1
-	 
+
+
+
+
+
 
     pygame.display.update()
 
